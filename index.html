@@ -3,341 +3,1272 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Шоукейс Анимаций и Фишек</title>
+  <title>Мега-Шоукейс: 50 Эффектов для Сайта</title>
   <style>
+    /* =========================================================
+       0. БАЗОВЫЕ СТИЛИ И СЕТКА
+       ========================================================= */
     :root {
       --bg: #0f172a;
       --card-bg: #1e293b;
       --accent: #8b5cf6;
+      --accent-glow: #a855f7;
       --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 2rem;
       font-family: system-ui, -apple-system, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
+      padding-bottom: 5rem;
+      overflow-x: hidden;
+      /* 28. Интерактивный свет фона под курсором */
+      background-image: radial-gradient(circle at var(--torch-x, 50%) var(--torch-y, 50%), rgba(139,92,246,0.15) 0%, transparent 60%);
+      background-attachment: fixed;
     }
 
-    h1 {
+    /* 21. Кастомный курсор с отставанием */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-glow);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease-out, opacity 0.2s;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 26. Увеличение круга при наведении на интерактивные элементы */
+    body.hovered .custom-cursor {
+      transform: translate(-50%, -50%) scale(2.5);
+      background: rgba(168, 85, 247, 0.2);
+    }
+
+    /* 25. Индикатор прогресса чтения */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ff007f, #00dfd8, #8b5cf6);
+      width: 0%;
+      z-index: 10000;
+    }
+
+    header {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      padding: 4rem 1rem 2rem;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin: 3rem auto 1.5rem;
+      max-width: 1200px;
+      padding-left: 1rem;
+      border-left: 4px solid var(--accent);
+      color: #e2e8f0;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
-      width: 100%;
-      max-width: 1000px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
     }
 
     .card {
       background: var(--card-bg);
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      min-height: 180px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 180px;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
 
-    .card h3 {
+    .card-num {
       position: absolute;
       top: 10px;
-      left: 15px;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 0;
+      left: 12px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--accent);
+      background: rgba(139, 92, 246, 0.15);
+      padding: 2px 8px;
+      border-radius: 10px;
     }
 
-    /* --- 1. ТЕКСТОВЫЕ АНИМАЦИИ --- */
+    .card-label {
+      position: absolute;
+      bottom: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
 
-    /* Градиентный текст */
-    .gradient-text {
+    /* =========================================================
+       I. ТЕКСТОВЫЕ ЭФФЕКТЫ (1 - 10)
+       ========================================================= */
+    /* 1. Неоновое свечение */
+    .neon-text {
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.5rem;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #0fa, 0 0 40px #0fa;
+      animation: neonFlicker 1.5s infinite alternate;
+    }
+    @keyframes neonFlicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
+
+    /* 2. Глитч-эффект */
+    .glitch {
+      font-size: 1.8rem;
+      font-weight: 900;
+      position: relative;
+      color: #fff;
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+    }
+    .glitch::before {
+      left: 2px; text-shadow: -2px 0 #ff00c1;
+      clip: rect(24px, 550px, 90px, 0);
+      animation: glitch-anim 2s infinite linear alternate-reverse;
+    }
+    .glitch::after {
+      left: -2px; text-shadow: -2px 0 #00fff5;
+      clip: rect(85px, 550px, 140px, 0);
+      animation: glitch-anim2 2.5s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-anim { 0% { clip: rect(10px, 9999px, 30px, 0); } 100% { clip: rect(70px, 9999px, 90px, 0); } }
+    @keyframes glitch-anim2 { 0% { clip: rect(60px, 9999px, 80px, 0); } 100% { clip: rect(10px, 9999px, 40px, 0); } }
+
+    /* 3. Жидкое заполнение */
+    .liquid-text {
+      font-size: 2rem;
+      font-weight: 900;
+      color: transparent;
+      -webkit-text-stroke: 1px #00dfd8;
+      background: linear-gradient(180deg, #00dfd8 50%, transparent 50%);
+      background-size: 100% 200%;
+      -webkit-background-clip: text;
+      animation: liquidFill 3s ease-in-out infinite alternate;
+    }
+    @keyframes liquidFill { 0% { background-position: 0 100%; } 100% { background-position: 0 0%; } }
+
+    /* 4. 3D Изменяющийся текст */
+    .text-3d {
       font-size: 1.8rem;
       font-weight: bold;
-      background: linear-gradient(90deg, #ff007f, #7928ca, #00dfd8, #ff007f);
-      background-size: 300% 100%;
+      color: #fff;
+      transition: text-shadow 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+    .text-3d:hover {
+      transform: translateY(-4px);
+      text-shadow: 1px 1px 0 #6366f1, 2px 2px 0 #6366f1, 3px 3px 0 #4f46e5, 4px 4px 0 #4338ca, 5px 5px 10px rgba(0,0,0,0.5);
+    }
+
+    /* 5. Маска из GIF/Видео */
+    .video-text {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: url('https://i.gifer.com/762A.gif') center/cover;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientShift 4s linear infinite;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
-    }
-
-    /* Эффект печатания */
-    .typing-text {
+    /* 6. Перемешивание матрица */
+    .scramble-text {
       font-family: monospace;
-      font-size: 1.2rem;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 3px solid var(--accent);
-      width: 0;
-      animation: typing 3.5s steps(22) infinite alternate, blink 0.75s step-end infinite;
+      font-size: 1.3rem;
+      color: #10b981;
+      cursor: pointer;
     }
 
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 22ch; }
+    /* 7. Раздвигающиеся буквы */
+    .expand-text {
+      font-size: 1.4rem;
+      letter-spacing: 1px;
+      transition: letter-spacing 0.4s ease, color 0.4s;
+      cursor: pointer;
+    }
+    .expand-text:hover {
+      letter-spacing: 6px;
+      color: #a855f7;
     }
 
-    @keyframes blink {
-      50% { border-color: transparent; }
+    /* 8. Размытие и появление */
+    .blur-in-text {
+      font-size: 1.5rem;
+      animation: blurIn 2s infinite alternate;
+    }
+    @keyframes blurIn {
+      from { filter: blur(12px); opacity: 0; }
+      to { filter: blur(0); opacity: 1; }
     }
 
-    /* Всплывающие буквы */
-    .wobbly-text span {
+    /* 9. Разрезание текста (Split) */
+    .split-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: relative;
       display: inline-block;
+      overflow: hidden;
+      height: 2rem;
+      cursor: pointer;
+    }
+    .split-text span {
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .split-text:hover span { transform: translateY(-50%); }
+
+    /* 10. Радужные буквы */
+    .rainbow-char span {
       font-size: 1.8rem;
       font-weight: bold;
-      animation: wave 1.2s ease-in-out infinite;
+      display: inline-block;
+      animation: rainbow 2s infinite alternate;
     }
+    .rainbow-char span:nth-child(1) { animation-delay: 0s; }
+    .rainbow-char span:nth-child(2) { animation-delay: 0.2s; }
+    .rainbow-char span:nth-child(3) { animation-delay: 0.4s; }
+    .rainbow-char span:nth-child(4) { animation-delay: 0.6s; }
+    .rainbow-char span:nth-child(5) { animation-delay: 0.8s; }
+    @keyframes rainbow { 0% { color: #ff007f; } 50% { color: #00dfd8; } 100% { color: #a855f7; } }
 
-    .wobbly-text span:nth-child(1) { animation-delay: 0.0s; }
-    .wobbly-text span:nth-child(2) { animation-delay: 0.1s; }
-    .wobbly-text span:nth-child(3) { animation-delay: 0.2s; }
-    .wobbly-text span:nth-child(4) { animation-delay: 0.3s; }
-    .wobbly-text span:nth-child(5) { animation-delay: 0.4s; }
-
-    @keyframes wave {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); color: var(--accent); }
-    }
-
-    /* --- 2. АНИМАЦИИ ИКОНОК И ЭЛЕМЕНТОВ --- */
-
-    .icon {
-      font-size: 3rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    /* Пульсация */
-    .pulse-icon {
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.25); filter: drop-shadow(0 0 10px #ef4444); }
-      100% { transform: scale(1); }
-    }
-
-    /* Вращение при наведении */
-    .spin-icon {
-      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .spin-icon:hover {
-      transform: rotate(360deg) scale(1.2);
-    }
-
-    /* Покачивание (Bell) */
-    .shake-icon:hover {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: rotate(0deg); }
-      20% { transform: rotate(-15deg); }
-      40% { transform: rotate(15deg); }
-      60% { transform: rotate(-10deg); }
-      80% { transform: rotate(10deg); }
-    }
-
-    /* --- 3. ИНТЕРАКТИВ И ПРИКОЛЫ --- */
-
-    /* Следящие глазки */
-    .eyes-container {
-      display: flex;
-      gap: 15px;
-    }
-
-    .eye {
-      width: 45px;
-      height: 45px;
-      background: white;
-      border-radius: 50%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pupil {
-      width: 18px;
-      height: 18px;
-      background: #0f172a;
-      border-radius: 50%;
-      position: absolute;
+    /* =========================================================
+       II. ЭФФЕКТЫ ДЛЯ КАРТОЧЕК И БЛОКОВ (11 - 20)
+       ========================================================= */
+    /* 11. 3D Tilt */
+    .tilt-card {
       transition: transform 0.1s ease-out;
+      transform-style: preserve-3d;
+      cursor: pointer;
     }
 
-    /* Динамическая кнопка */
-    .fun-btn {
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-      font-weight: bold;
+    /* 12. Glassmorphism */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* 13. Анимированная градиентная рамка */
+    .animated-border {
+      position: relative;
+    }
+    .animated-border::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(90deg, #ff007f, #00dfd8, #ff007f);
+      background-size: 300%;
+      border-radius: 14px;
+      z-index: -1;
+      animation: borderRun 4s linear infinite;
+    }
+    @keyframes borderRun { 0% { background-position: 0%; } 100% { background-position: 300%; } }
+
+    /* 14. Скелетон загрузка */
+    .skeleton-box {
+      width: 80%;
+      height: 20px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+      background-size: 200% 100%;
+      animation: skeletonLoading 1.5s infinite;
+      margin: 6px 0;
+    }
+    @keyframes skeletonLoading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* 15. Раскрытие Accordion */
+    .accordion-card {
+      cursor: pointer;
+      text-align: center;
+    }
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, margin-top 0.4s;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .accordion-card.open .accordion-content {
+      max-height: 100px;
+      margin-top: 10px;
+    }
+
+    /* 16. Загибающийся уголок */
+    .fold-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      border-width: 0 25px 25px 0;
+      border-style: solid;
+      border-color: #0f172a #0f172a #334155 #334155;
+      box-shadow: -2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    /* 17. Неоновая аура */
+    .neon-box {
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.6), inset 0 0 15px rgba(139, 92, 246, 0.4);
+      border: 1px solid rgba(139, 92, 246, 0.8);
+    }
+
+    /* 18. 3D Flip Card */
+    .flip-card {
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flip-inner {
+      width: 100%; height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute;
+      backface-visibility: hidden;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+    }
+    .flip-back { transform: rotateY(180deg); color: var(--accent-glow); font-weight: bold; }
+
+    /* 19. Мягкая просадка кнопки */
+    .btn-press {
+      padding: 0.6rem 1.2rem;
+      background: #6366f1;
       color: white;
-      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 5px 0 #4338ca;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    .btn-press:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #4338ca;
+    }
+
+    /* 20. Подсветка границ под курсором (Spotlight Border) */
+    .spotlight-card {
+      position: relative;
+    }
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(80px circle at var(--sp-x, 50%) var(--sp-y, 50%), rgba(255,255,255,0.25), transparent);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       III. ЭФФЕКТЫ КУРСОРА И ИНТЕРАКТИВ (22 - 30)
+       ========================================================= */
+    /* 22. Магнитная кнопка */
+    .magnetic-btn {
+      padding: 0.7rem 1.5rem;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      border: none;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* 23. Следы из частичек */
+    .sparkle-particle {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: var(--accent-glow);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      animation: particleFade 0.8s forwards;
+    }
+    @keyframes particleFade {
+      to { transform: scale(2) translateY(-20px); opacity: 0; }
+    }
+
+    /* 24. Material Ripple */
+    .ripple-btn {
+      position: relative;
+      overflow: hidden;
+      padding: 0.7rem 1.5rem;
+      background: #334155;
+      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(0);
+      animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+    /* 27, 29, 30: Общие контейнеры для интерактивных демонстраций */
+    .interactive-box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* 30. Линза размытия */
+    .lens-container {
       position: relative;
-      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
-      transition: transform 0.1s, box-shadow 0.2s;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://picsum.photos/300/200?grayscale') center/cover;
+      border-radius: 8px;
+    }
+    .lens-overlay {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(8px);
+      mask: radial-gradient(50px circle at var(--lx, 50%) var(--ly, 50%), transparent 100%, black 100%);
+      -webkit-mask: radial-gradient(50px circle at var(--lx, 50%) var(--ly, 50%), transparent 0%, black 100%);
     }
 
-    .fun-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+    /* =========================================================
+       IV. АНИМАЦИИ СКРОЛЛА (31 - 40)
+       ========================================================= */
+    /* 31. Появление при скролле */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .fun-btn:active {
-      transform: translateY(1px);
+    /* 32. Горизонтальный скролл */
+    .horiz-scroll {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      width: 100%;
+      padding: 10px;
+      scroll-snap-type: x mandatory;
+    }
+    .horiz-item {
+      flex: 0 0 120px;
+      height: 70px;
+      background: #334155;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      scroll-snap-align: center;
     }
 
-    /* Карточка с подсветкой мышью */
-    .glow-card {
-      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.3) 0%, transparent 60%), var(--card-bg);
+    /* 38. SVG Волна-разделитель */
+    .wave-container {
+      width: 100%;
+      margin: 2rem 0;
+    }
+
+    /* 40. Фиксированный параллакс фон */
+    .bg-fixed-banner {
+      width: 100%;
+      height: 120px;
+      background-image: url('https://picsum.photos/800/300');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold;
+      text-shadow: 0 2px 4px #000;
+    }
+
+    /* =========================================================
+       V. ИКОНКИ, ЛОАДЕРЫ И ПРИКОЛЫ (41 - 50)
+       ========================================================= */
+    /* 41. Подпрыгивающая иконка */
+    .bounce-icon {
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+    .bounce-icon:hover {
+      animation: iconBounce 0.6s cubic-bezier(0.28, 0.84, 0.42, 1);
+    }
+    @keyframes iconBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* 42. Переключатель темы */
+    .theme-toggle-btn {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.5s ease;
+    }
+    .theme-toggle-btn.rotated { transform: rotate(360deg); }
+
+    /* 43. SVG Анимация пути */
+    .svg-draw {
+      width: 60px; height: 60px;
+      stroke: var(--accent-glow);
+      stroke-width: 3;
+      fill: none;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: drawSvg 3s infinite alternate ease-in-out;
+    }
+    @keyframes drawSvg { to { stroke-dashoffset: 0; } }
+
+    /* 44. Вылезающий элемент Peek-a-boo */
+    .peek-boo {
+      position: absolute;
+      bottom: -35px;
+      right: 15px;
+      font-size: 2rem;
+      transition: bottom 0.3s ease;
+      cursor: pointer;
+    }
+    .card:hover .peek-boo { bottom: 5px; }
+
+    /* 45. Летающие пузыри */
+    .bubble-card { position: relative; }
+    .bubble-card .bubble {
+      position: absolute;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      bottom: -20px;
+      animation: floatUp 4s infinite linear;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.5); opacity: 1; }
+      100% { transform: translateY(-150px) scale(1.2); opacity: 0; }
+    }
+
+    /* 46. 3-Dot Loader */
+    .dot-loader span {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 3px;
+      animation: dotFlashing 0.8s infinite alternate;
+    }
+    .dot-loader span:nth-child(2) { animation-delay: 0.2s; }
+    .dot-loader span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotFlashing { 0% { opacity: 0.2; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+
+    /* 47. Кнопка Конфетти */
+    .confetti-btn {
+      padding: 0.6rem 1.2rem;
+      background: #ec4899;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* 48. Шиммер / Блик */
+    .shimmer-btn {
+      position: relative;
+      padding: 0.7rem 1.5rem;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .shimmer-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(60deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+      transform: rotate(30deg);
+      animation: shimmerPass 3s infinite;
+    }
+    @keyframes shimmerPass { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
+
+    /* 49. Взрыв букв */
+    .shatter-text span {
+      display: inline-block;
+      transition: transform 0.5s ease, opacity 0.5s;
+      cursor: pointer;
+    }
+
+    /* 50. Canvas частиц на заднем фоне */
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+    
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
 
-  <h1>✨ Анимации & Фишки HTML/CSS</h1>
+  <!-- 25. Прогресс скролла -->
+  <div id="scroll-progress"></div>
 
-  <div class="grid">
-    
-    <!-- 1. Бегущий градиент -->
-    <div class="card">
-      <h3>Текст / Градиент</h3>
-      <div class="gradient-text">Живой Текст</div>
-    </div>
+  <!-- 21. Кастомный курсор -->
+  <div class="custom-cursor" id="cursor"></div>
 
-    <!-- 2. Печатающийся текст -->
-    <div class="card">
-      <h3>Текст / Печать</h3>
-      <div class="typing-text">console.log("Hello!");</div>
-    </div>
+  <!-- 50. Интерактивный Canvas фоновых частиц -->
+  <canvas id="particles-canvas"></canvas>
 
-    <!-- 3. Волна из букв -->
-    <div class="card">
-      <h3>Текст / Волна</h3>
-      <div class="wobbly-text">
-        <span>В</span><span>А</span><span>У</span><span>!</span><span>!</span>
+  <div class="content-wrapper">
+    <header>
+      <h1 class="gradient-title" style="font-size:2.8rem; font-weight:900;">⚡ 50 HTML/CSS/JS Эффектов</h1>
+      <p style="color:var(--text-muted); margin-top:0.5rem;">Единая коллекция визуальных фишек и интерактива</p>
+    </header>
+
+    <!-- =========================================================
+         СЕКЦИЯ I: ТЕКСТОВЫЕ ЭФФЕКТЫ
+         ========================================================= -->
+    <h2 class="section-title">I. Текстовые эффекты</h2>
+    <div class="grid">
+      
+      <!-- 1 -->
+      <div class="card reveal">
+        <span class="card-num">#1</span>
+        <div class="neon-text">НЕОН</div>
+        <span class="card-label">Neon Glow</span>
       </div>
-    </div>
 
-    <!-- 4. Пульсация -->
-    <div class="card">
-      <h3>Иконка / Пульсация</h3>
-      <div class="icon pulse-icon">❤️</div>
-    </div>
-
-    <!-- 5. Вращение -->
-    <div class="card">
-      <h3>Иконка / Наведение</h3>
-      <div class="icon spin-icon">⚙️</div>
-    </div>
-
-    <!-- 6. Покачивание -->
-    <div class="card">
-      <h3>Иконка / Наведение</h3>
-      <div class="icon shake-icon">🔔</div>
-    </div>
-
-    <!-- 7. Следящие глаза -->
-    <div class="card">
-      <h3>Интерактив / Глаза</h3>
-      <div class="eyes-container">
-        <div class="eye"><div class="pupil"></div></div>
-        <div class="eye"><div class="pupil"></div></div>
+      <!-- 2 -->
+      <div class="card reveal">
+        <span class="card-num">#2</span>
+        <div class="glitch" data-text="GLITCH">GLITCH</div>
+        <span class="card-label">Glitch FX</span>
       </div>
+
+      <!-- 3 -->
+      <div class="card reveal">
+        <span class="card-num">#3</span>
+        <div class="liquid-text">LIQUID</div>
+        <span class="card-label">Liquid Fill</span>
+      </div>
+
+      <!-- 4 -->
+      <div class="card reveal">
+        <span class="card-num">#4</span>
+        <div class="text-3d">HOVER 3D</div>
+        <span class="card-label">3D Hover Text</span>
+      </div>
+
+      <!-- 5 -->
+      <div class="card reveal">
+        <span class="card-num">#5</span>
+        <div class="video-text">FLOW</div>
+        <span class="card-label">Gif / Video Masking</span>
+      </div>
+
+      <!-- 6 -->
+      <div class="card reveal">
+        <span class="card-num">#6</span>
+        <div class="scramble-text" id="scrambleEl" onclick="triggerScramble()">> MATRIX</div>
+        <span class="card-label">Matrix Scramble (Кликни)</span>
+      </div>
+
+      <!-- 7 -->
+      <div class="card reveal">
+        <span class="card-num">#7</span>
+        <div class="expand-text">EXPAND</div>
+        <span class="card-label">Letter Spacing</span>
+      </div>
+
+      <!-- 8 -->
+      <div class="card reveal">
+        <span class="card-num">#8</span>
+        <div class="blur-in-text">FOCUS</div>
+        <span class="card-label">Blur Reveal</span>
+      </div>
+
+      <!-- 9 -->
+      <div class="card reveal">
+        <span class="card-num">#9</span>
+        <div class="split-text">
+          <span>HOVER ME</span>
+          <span style="color:var(--accent-glow)">SPLIT TEXT</span>
+        </div>
+        <span class="card-label">Split Text Hover</span>
+      </div>
+
+      <!-- 10 -->
+      <div class="card reveal">
+        <span class="card-num">#10</span>
+        <div class="rainbow-char">
+          <span>C</span><span>O</span><span>L</span><span>O</span><span>R</span>
+        </div>
+        <span class="card-label">Rainbow Cycle</span>
+      </div>
+
     </div>
 
-    <!-- 8. Кликер-прикол -->
-    <div class="card">
-      <h3>Прикол / Клик</h3>
-      <button class="fun-btn" onclick="popEmoji(event)">Нажми меня!</button>
+    <!-- =========================================================
+         СЕКЦИЯ II: КАРТОЧКИ И БЛОКИ
+         ========================================================= -->
+    <h2 class="section-title">II. Эффекты для карточек и блоков</h2>
+    <div class="grid">
+
+      <!-- 11 -->
+      <div class="card tilt-card reveal" id="tiltCard">
+        <span class="card-num">#11</span>
+        <p style="font-weight:bold;">3D Tilt Card</p>
+        <span class="card-label">Поводи мышью</span>
+      </div>
+
+      <!-- 12 -->
+      <div class="card glass-card reveal">
+        <span class="card-num">#12</span>
+        <p style="font-weight:bold;">Glassmorphism</p>
+        <span class="card-label">Матовое стекло</span>
+      </div>
+
+      <!-- 13 -->
+      <div class="card animated-border reveal">
+        <span class="card-num">#13</span>
+        <p>Animated Border</p>
+        <span class="card-label">Градиентная рамка</span>
+      </div>
+
+      <!-- 14 -->
+      <div class="card reveal">
+        <span class="card-num">#14</span>
+        <div class="skeleton-box"></div>
+        <div class="skeleton-box" style="width:60%;"></div>
+        <span class="card-label">Skeleton Loading</span>
+      </div>
+
+      <!-- 15 -->
+      <div class="card accordion-card reveal" onclick="this.classList.toggle('open')">
+        <span class="card-num">#15</span>
+        <p style="font-weight:bold;">Accordion (Клик)</p>
+        <div class="accordion-content">Скрытый контент плавно раскрывается!</div>
+        <span class="card-label">Expand Card</span>
+      </div>
+
+      <!-- 16 -->
+      <div class="card fold-card reveal">
+        <span class="card-num">#16</span>
+        <p>Paper Fold</p>
+        <span class="card-label">Загнутый уголок</span>
+      </div>
+
+      <!-- 17 -->
+      <div class="card neon-box reveal">
+        <span class="card-num">#17</span>
+        <p>Neon Box</p>
+        <span class="card-label">Неоновая аура</span>
+      </div>
+
+      <!-- 18 -->
+      <div class="card flip-card reveal">
+        <span class="card-num">#18</span>
+        <div class="flip-inner">
+          <div class="flip-front">3D Flip (Hover)</div>
+          <div class="flip-back">Задняя сторона! 🚀</div>
+        </div>
+        <span class="card-label">Card Flip</span>
+      </div>
+
+      <!-- 19 -->
+      <div class="card reveal">
+        <span class="card-num">#19</span>
+        <button class="btn-press">PRESS ME</button>
+        <span class="card-label">3D Press Down Button</span>
+      </div>
+
+      <!-- 20 -->
+      <div class="card spotlight-card reveal" id="spotlightCard">
+        <span class="card-num">#20</span>
+        <p>Spotlight Border</p>
+        <span class="card-label">Свет за курсором</span>
+      </div>
+
     </div>
 
-    <!-- 9. Подсветка карточки курсором -->
-    <div class="card glow-card" id="glowCard">
-      <h3>Интерактив / Свет</h3>
-      <p style="text-align: center; color: #94a3b8; margin: 0;">Поводи курсором по этой карточке</p>
+    <!-- =========================================================
+         СЕКЦИЯ III: КУРСОР И ИНТЕРАКТИВ
+         ========================================================= -->
+    <h2 class="section-title">III. Эффекты курсора и интерактив</h2>
+    <div class="grid">
+
+      <!-- 22 -->
+      <div class="card reveal">
+        <span class="card-num">#22</span>
+        <button class="magnetic-btn" id="magBtn">Magnetic</button>
+        <span class="card-label">Магнитная кнопка</span>
+      </div>
+
+      <!-- 23 -->
+      <div class="card reveal">
+        <span class="card-num">#23</span>
+        <p style="color:var(--accent-glow)">Sparkle Trail</p>
+        <span class="card-label">Двигай мышью по сайту</span>
+      </div>
+
+      <!-- 24 -->
+      <div class="card reveal">
+        <span class="card-num">#24</span>
+        <button class="ripple-btn" onclick="createRipple(event)">Ripple Effect</button>
+        <span class="card-label">Material Ripple</span>
+      </div>
+
+      <!-- 27 -->
+      <div class="card reveal">
+        <span class="card-num">#27</span>
+        <p id="parallaxText">Mouse Parallax</p>
+        <span class="card-label">Смещение текста мышью</span>
+      </div>
+
+      <!-- 29 -->
+      <div class="card reveal">
+        <span class="card-num">#29</span>
+        <div id="attractBox" style="width:40px; height:40px; background:#10b981; border-radius:50%; transition:transform 0.2s;"></div>
+        <span class="card-label">Притягивающийся шар</span>
+      </div>
+
+      <!-- 30 -->
+      <div class="card reveal">
+        <span class="card-num">#30</span>
+        <div class="lens-container" id="lensBox">
+          <p style="z-index:2; font-weight:bold;">LENS</p>
+          <div class="lens-overlay"></div>
+        </div>
+        <span class="card-label">Cursor Lens Blur</span>
+      </div>
+
     </div>
 
+    <!-- =========================================================
+         СЕКЦИЯ IV: АНИМАЦИИ СКРОЛЛА
+         ========================================================= -->
+    <h2 class="section-title">IV. Анимации скролла и блоков</h2>
+    <div class="grid">
+
+      <!-- 31 -->
+      <div class="card reveal">
+        <span class="card-num">#31</span>
+        <p>Fade In Up</p>
+        <span class="card-label">Reveal при прокрутке</span>
+      </div>
+
+      <!-- 32 -->
+      <div class="card reveal">
+        <span class="card-num">#32</span>
+        <div class="horiz-scroll">
+          <div class="horiz-item">1</div>
+          <div class="horiz-item">2</div>
+          <div class="horiz-item">3</div>
+          <div class="horiz-item">4</div>
+        </div>
+        <span class="card-label">Horizontal Scroll</span>
+      </div>
+
+      <!-- 40 -->
+      <div class="card reveal" style="grid-column: 1 / -1;">
+        <span class="card-num">#40</span>
+        <div class="bg-fixed-banner">Fixed Background Parallax</div>
+        <span class="card-label">Фиксированный фон</span>
+      </div>
+
+    </div>
+
+    <!-- 38. SVG Wave Divider -->
+    <div class="wave-container">
+      <svg viewBox="0 0 1440 120" style="width:100%; height:auto;">
+        <path fill="#1e293b" d="M0,32L60,42.7C120,53,240,75,360,80C480,85,600,75,720,58.7C840,43,960,21,1080,26.7C1200,32,1320,64,1380,80L1440,96L1440,120L0,120Z"></path>
+      </svg>
+    </div>
+
+    <!-- =========================================================
+         СЕКЦИЯ V: ИКОНКИ, ЛОАДЕРЫ И ПРИКОЛЫ
+         ========================================================= -->
+    <h2 class="section-title">V. Иконки, лоадеры и фишки</h2>
+    <div class="grid">
+
+      <!-- 41 -->
+      <div class="card reveal">
+        <span class="card-num">#41</span>
+        <div class="bounce-icon">🔔</div>
+        <span class="card-label">Bounce Icon (Hover)</span>
+      </div>
+
+      <!-- 42 -->
+      <div class="card reveal">
+        <span class="card-num">#42</span>
+        <div class="theme-toggle-btn" onclick="this.classList.toggle('rotated')">☀️</div>
+        <span class="card-label">Animated Theme Icon</span>
+      </div>
+
+      <!-- 43 -->
+      <div class="card reveal">
+        <span class="card-num">#43</span>
+        <svg class="svg-draw" viewBox="0 0 50 50">
+          <circle cx="25" cy="25" r="20" />
+        </svg>
+        <span class="card-label">SVG Path Draw</span>
+      </div>
+
+      <!-- 44 -->
+      <div class="card reveal">
+        <span class="card-num">#44</span>
+        <p>Peek-a-boo</p>
+        <div class="peek-boo">👀</div>
+        <span class="card-label">Наведи на карточку</span>
+      </div>
+
+      <!-- 45 -->
+      <div class="card bubble-card reveal" id="bubbleCard">
+        <span class="card-num">#45</span>
+        <p>Floating Bubbles</p>
+        <span class="card-label">Летающие пузыри</span>
+      </div>
+
+      <!-- 46 -->
+      <div class="card reveal">
+        <span class="card-num">#46</span>
+        <div class="dot-loader">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="card-label">3-Dot Flashing Loader</span>
+      </div>
+
+      <!-- 47 -->
+      <div class="card reveal">
+        <span class="card-num">#47</span>
+        <button class="confetti-btn" onclick="spawnConfetti(event)">ПРАЗДНИК 🎉</button>
+        <span class="card-label">Confetti Burst</span>
+      </div>
+
+      <!-- 48 -->
+      <div class="card reveal">
+        <span class="card-num">#48</span>
+        <button class="shimmer-btn">Shimmer Pass</button>
+        <span class="card-label">Блик / Шиммер</span>
+      </div>
+
+      <!-- 49 -->
+      <div class="card reveal">
+        <span class="card-num">#49</span>
+        <div class="shatter-text" id="shatterText" onclick="shatterEffect()">
+          <span>B</span><span>O</span><span>O</span><span>M</span><span>!</span>
+        </div>
+        <span class="card-label">Shatter Text (Клик)</span>
+      </div>
+
+    </div>
   </div>
 
+  <!-- =========================================================
+     JAVASCRIPT ЛОГИКА ДЛЯ ИНТЕРАКТИВА
+     ========================================================= -->
   <script>
-    // --- 1. Логика для следящих глаз ---
-    document.addEventListener('mousemove', (e) => {
-      const pupils = document.querySelectorAll('.pupil');
-      pupils.forEach(pupil => {
-        const eye = pupil.parentElement;
-        const rect = eye.getBoundingClientRect();
-        const eyeX = rect.left + rect.width / 2;
-        const eyeY = rect.top + rect.height / 2;
-        
-        const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-        const distance = Math.min(rect.width / 4, Math.hypot(e.clientX - eyeX, e.clientY - eyeY));
-        
-        const x = Math.cos(angle) * distance;
-        const y = Math.sin(angle) * distance;
-        
-        pupil.style.transform = `translate(${x}px, ${y}px)`;
-      });
+    /* --- 21 & 26. Кастомный курсор + Hover эффекты --- */
+    const cursor = document.getElementById('cursor');
+    let mx = 0, my = 0, cx = 0, cy = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+
+      // 28. Интерактивный свет фона
+      document.body.style.setProperty('--torch-x', `${mx}px`);
+      document.body.style.setProperty('--torch-y', `${my}px`);
+
+      // 23. Sparkle Trail
+      if (Math.random() < 0.2) {
+        const p = document.createElement('div');
+        p.className = 'sparkle-particle';
+        p.style.left = `${mx}px`;
+        p.style.top = `${my}px`;
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+      }
     });
 
-    // --- 2. Логика подлетающего эмодзи при клике ---
-    function popEmoji(event) {
-      const emojis = ['🎉', '🚀', '🔥', '✨', '💥', '🎈'];
-      const emoji = document.createElement('div');
-      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-      
-      emoji.style.position = 'fixed';
-      emoji.style.left = `${event.clientX}px`;
-      emoji.style.top = `${event.clientY}px`;
-      emoji.style.fontSize = '2rem';
-      emoji.style.pointerEvents = 'none';
-      emoji.style.transition = 'all 0.8s ease-out';
-      
-      document.body.appendChild(emoji);
+    function animateCursor() {
+      cx += (mx - cx) * 0.15;
+      cy += (my - cy) * 0.15;
+      cursor.style.left = `${cx}px`;
+      cursor.style.top = `${cy}px`;
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
 
-      requestAnimationFrame(() => {
-        emoji.style.transform = `translate(${(Math.random() - 0.5) * 100}px, -100px) scale(1.5)`;
-        emoji.style.opacity = '0';
+    document.querySelectorAll('button, .card, a').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
+    });
+
+    /* --- 25. Прогресс скролла --- */
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      document.getElementById('scroll-progress').style.width = (winScroll / height) * 100 + "%";
+    });
+
+    /* --- 31. Scroll Reveal --- */
+    const reveals = document.querySelectorAll('.reveal');
+    function checkReveal() {
+      const triggerBottom = window.innerHeight * 0.85;
+      reveals.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < triggerBottom) el.classList.add('active');
       });
+    }
+    window.addEventListener('scroll', checkReveal);
+    checkReveal();
 
-      setTimeout(() => emoji.remove(), 800);
+    /* --- 6. Scramble Text --- */
+    function triggerScramble() {
+      const el = document.getElementById('scrambleEl');
+      const target = "> MATRIX";
+      const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+      let iter = 0;
+      const interval = setInterval(() => {
+        el.innerText = target.split('').map((char, index) => {
+          if (index < iter) return target[index];
+          return chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        if (iter >= target.length) clearInterval(interval);
+        iter += 1 / 3;
+      }, 30);
     }
 
-    // --- 3. Подсветка карточки следом от мыши ---
-    const glowCard = document.getElementById('glowCard');
-    glowCard.addEventListener('mousemove', (e) => {
-      const rect = glowCard.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      glowCard.style.setProperty('--mouse-x', `${x}%`);
-      glowCard.style.setProperty('--mouse-y', `${y}%`);
+    /* --- 11. 3D Tilt Card --- */
+    const tiltCard = document.getElementById('tiltCard');
+    tiltCard.addEventListener('mousemove', e => {
+      const rect = tiltCard.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      tiltCard.style.transform = `perspective(1000px) rotateX(${-y / 8}deg) rotateY(${x / 8}deg)`;
     });
+    tiltCard.addEventListener('mouseleave', () => {
+      tiltCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    });
+
+    /* --- 20. Spotlight Border --- */
+    const spotlightCard = document.getElementById('spotlightCard');
+    spotlightCard.addEventListener('mousemove', e => {
+      const rect = spotlightCard.getBoundingClientRect();
+      spotlightCard.style.setProperty('--sp-x', `${e.clientX - rect.left}px`);
+      spotlightCard.style.setProperty('--sp-y', `${e.clientY - rect.top}px`);
+    });
+
+    /* --- 22. Magnetic Button --- */
+    const magBtn = document.getElementById('magBtn');
+    magBtn.addEventListener('mousemove', e => {
+      const rect = magBtn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      magBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+    magBtn.addEventListener('mouseleave', () => {
+      magBtn.style.transform = 'translate(0, 0)';
+    });
+
+    /* --- 24. Material Ripple --- */
+    function createRipple(event) {
+      const btn = event.currentTarget;
+      const circle = document.createElement('span');
+      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+      const rect = btn.getBoundingClientRect();
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${event.clientX - rect.left - diameter / 2}px`;
+      circle.style.top = `${event.clientY - rect.top - diameter / 2}px`;
+      circle.classList.add('ripple');
+      btn.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    }
+
+    /* --- 27. Mouse Parallax --- */
+    const parallaxText = document.getElementById('parallaxText');
+    document.addEventListener('mousemove', e => {
+      const x = (window.innerWidth / 2 - e.clientX) / 25;
+      const y = (window.innerHeight / 2 - e.clientY) / 25;
+      parallaxText.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    /* --- 29. Attracting Ball --- */
+    const attractBox = document.getElementById('attractBox');
+    document.addEventListener('mousemove', e => {
+      const rect = attractBox.getBoundingClientRect();
+      const bx = rect.left + rect.width / 2;
+      const by = rect.top + rect.height / 2;
+      const dist = Math.hypot(e.clientX - bx, e.clientY - by);
+      if (dist < 150) {
+        const angle = Math.atan2(e.clientY - by, e.clientX - bx);
+        const force = (150 - dist) * 0.2;
+        attractBox.style.transform = `translate(${Math.cos(angle) * force}px, ${Math.sin(angle) * force}px)`;
+      } else {
+        attractBox.style.transform = 'translate(0,0)';
+      }
+    });
+
+    /* --- 30. Lens Overlay --- */
+    const lensBox = document.getElementById('lensBox');
+    lensBox.addEventListener('mousemove', e => {
+      const rect = lensBox.getBoundingClientRect();
+      lensBox.style.setProperty('--lx', `${e.clientX - rect.left}px`);
+      lensBox.style.setProperty('--ly', `${e.clientY - rect.top}px`);
+    });
+
+    /* --- 45. Bubbles generator --- */
+    const bubbleCard = document.getElementById('bubbleCard');
+    setInterval(() => {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = Math.random() * 20 + 10;
+      b.style.width = `${size}px`;
+      b.style.height = `${size}px`;
+      b.style.left = `${Math.random() * 80 + 10}%`;
+      bubbleCard.appendChild(b);
+      setTimeout(() => b.remove(), 4000);
+    }, 1000);
+
+    /* --- 47. Confetti Burst --- */
+    function spawnConfetti(e) {
+      for (let i = 0; i < 30; i++) {
+        const conf = document.createElement('div');
+        conf.style.position = 'fixed';
+        conf.style.left = `${e.clientX}px`;
+        conf.style.top = `${e.clientY}px`;
+        conf.style.width = '8px';
+        conf.style.height = '8px';
+        conf.style.backgroundColor = ['#ff007f', '#00dfd8', '#a855f7', '#eab308'][Math.floor(Math.random() * 4)];
+        conf.style.borderRadius = '50%';
+        conf.style.pointerEvents = 'none';
+        conf.style.zIndex = '9999';
+        document.body.appendChild(conf);
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 120 + 40;
+        const x = Math.cos(angle) * speed;
+        const y = Math.sin(angle) * speed;
+
+        conf.animate([
+          { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+          { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+        ], {
+          duration: 800,
+          easing: 'cubic-bezier(0,0,0.2,1)'
+        }).onfinish = () => conf.remove();
+      }
+    }
+
+    /* --- 49. Shatter Effect --- */
+    function shatterEffect() {
+      const spans = document.querySelectorAll('#shatterText span');
+      spans.forEach(span => {
+        const rx = (Math.random() - 0.5) * 120;
+        const ry = (Math.random() - 0.5) * 120;
+        span.style.transform = `translate(${rx}px, ${ry}px) rotate(${rx}deg)`;
+        span.style.opacity = '0';
+      });
+      setTimeout(() => {
+        spans.forEach(span => {
+          span.style.transform = 'translate(0,0) rotate(0deg)';
+          span.style.opacity = '1';
+        });
+      }, 1200);
+    }
+
+    /* --- 50. Canvas Particles Network --- */
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let pts = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 50; i++) {
+      pts.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#8b5cf6';
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)';
+
+      pts.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < pts.length; j++) {
+          const p2 = pts[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
   </script>
 </body>
 </html>
